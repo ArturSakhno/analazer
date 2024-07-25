@@ -36,9 +36,16 @@ jobs:
         id: run_script # Give an ID to use the output in later steps
         run: |
           output=$(python script.py)
+          echo "Script output: $output"
           echo "script_output<<EOF" >> $GITHUB_ENV
           echo "$output" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+
+      # Debug step to print environment variable
+      - name: Print environment variable
+        run: echo "script_output=$script_output"
+        env:
+          script_output: ${{ steps.run_script.outputs.script_output }}
 
       # Add a comment to the pull request with the output if different
       - name: Comment on PR if different
@@ -46,6 +53,7 @@ jobs:
         with:
           script: |
             const scriptOutput = process.env.script_output;
+            console.log(`script_output: ${scriptOutput}`);
             const { data: comments } = await github.rest.issues.listComments({
               ...context.repo,
               issue_number: context.issue.number,
