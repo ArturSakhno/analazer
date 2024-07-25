@@ -26,9 +26,13 @@ jobs:
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    # Run your Python script
+    # Run Python script and capture the output
     - name: Run script
-      run: python script.py  # Replace 'your-script.py' with the path to your script
+      id: run_script  # Give an ID to use the output in later steps
+      run: |
+        output=$(python script.py)
+        echo "$output" > output.txt
+        echo "::set-output name=script_output::$output"
 
     # Read the output from the file
     - name: Read output
