@@ -38,15 +38,26 @@ jobs:
           output=$(python script.py)
           echo "::set-output name=script_output::$output"
 
-      # Add a comment to the pull request with the output
-      - name: Comment on PR
+      # Add a comment to the pull request with the output if different
+      - name: Comment on PR if different
         uses: actions/github-script@v6
         with:
           script: |
-            github.rest.issues.createComment({
+            const scriptOutput = process.env.script_output;
+            const { data: comments } = await github.rest.issues.listComments({
               ...context.repo,
               issue_number: context.issue.number,
-              body: `Output of the script:\n\`\`\`\n${process.env.script_output}\n\`\`\``
-            })
+            });
+
+            const outputComment = `Output of the script:\n\`\`\`\n${scriptOutput}\n\`\`\``;
+            const commentExists = comments.some(comment => comment.body === outputComment);
+
+            if (!commentExists) {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: context.issue.number,
+                body: outputComment,
+              });
+            }
         env:
           script_output: ${{ steps.run_script.outputs.script_output }}
