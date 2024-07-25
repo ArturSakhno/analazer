@@ -36,7 +36,9 @@ jobs:
         id: run_script # Give an ID to use the output in later steps
         run: |
           output=$(python script.py)
-          echo "script_output=$output" >> $GITHUB_ENV
+          echo "script_output<<EOF" >> $GITHUB_ENV
+          echo "$output" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
       # Add a comment to the pull request with the output if different
       - name: Comment on PR if different
