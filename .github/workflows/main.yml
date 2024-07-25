@@ -40,11 +40,6 @@ jobs:
           echo "$output" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-        # Debug step to print raw script output
-      - name: Print raw script output
-        run: echo "Raw script output: $output"
-
-
       # Debug step to print environment variable
       - name: Print environment variable
         run: echo "script_output=$script_output"
