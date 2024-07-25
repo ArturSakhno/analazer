@@ -36,7 +36,7 @@ jobs:
         id: run_script # Give an ID to use the output in later steps
         run: |
           output=$(python script.py)
-          echo "::set-output name=script_output::$output"
+          echo "script_output=$output" >> $GITHUB_ENV
 
       # Add a comment to the pull request with the output if different
       - name: Comment on PR if different
