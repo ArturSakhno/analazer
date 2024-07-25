@@ -36,10 +36,14 @@ jobs:
         id: run_script # Give an ID to use the output in later steps
         run: |
           output=$(python script.py)
-          echo "Script output: $output"
           echo "script_output<<EOF" >> $GITHUB_ENV
           echo "$output" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+
+        # Debug step to print raw script output
+      - name: Print raw script output
+        run: echo "Raw script output: $output"
+
 
       # Debug step to print environment variable
       - name: Print environment variable
