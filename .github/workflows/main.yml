@@ -33,17 +33,18 @@ jobs:
 
       # Run Python script and capture the output
       - name: Run script
-        id: run_script
+        id: run_script # Give an ID to use the output in later steps
         run: |
           output=$(python script.py)
           echo "Raw script output: $output"  # Debugging line to print the raw output
           echo "script_output<<EOF" >> $GITHUB_ENV
           echo "$output" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+        shell: bash
 
       # Debug step to print environment variable
       - name: Print environment variable
-        run: echo "script_output=$script_output"
+        run: echo "script_output=${{ env.script_output }}"
         env:
           script_output: ${{ steps.run_script.outputs.script_output }}
 
@@ -70,4 +71,4 @@ jobs:
               });
             }
         env:
-          script_output: ${{ steps.run_script.outputs.script_output }}
+          script_output: ${{ env.script_output }}
